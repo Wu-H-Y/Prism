@@ -1,0 +1,91 @@
+[package]
+name = "app"
+description = "Prism rust backend"
+version = "0.1.7"
+authors = [ "Wuhy" ]
+edition = "2024"
+
+[build-dependencies.tauri-build]
+version = "2"
+features = []
+
+[lib]
+name = "app_lib"
+crate-type = [ "staticlib", "cdylib", "rlib" ]
+
+[dependencies]
+tauri-plugin-log = "2"
+tauri-plugin-shell = "2"
+tauri-plugin-fs = "2"
+serde_json = "1.0"
+specta-typescript = "0.0.9"
+log = "0.4"
+tracing = "0.1"
+tokio-util = "0.7"
+async-trait = "0.1"
+futures-util = "0.3"
+jsonpath-rust = "1.0.4"
+boa_engine = "0.21"
+rustpython-vm = "0.4"
+tera = "1"
+scraper = "0.25.0"
+regex = "1"
+m3u8-rs = "6.0"
+sha2 = "0.10"
+sha1 = "0.10"
+hex = "0.4"
+base64 = "0.22.1"
+md5 = "0.8.0"
+url = "2.5"
+urlencoding = "2.1"
+percent-encoding = "2.3"
+quick_cache = "0.6.18"
+dashmap = "6.1.0"
+sea-orm-migration = "2.0.0-rc.27"
+foyer = "0.21"
+thiserror = "2"
+anyhow = "1"
+
+[dependencies.tauri]
+version = "2"
+features = []
+
+[dependencies.tauri-specta]
+version = "2.0.0-rc.21"
+features = [ "derive", "typescript" ]
+
+[dependencies.serde]
+version = "1.0"
+features = [ "derive" ]
+
+[dependencies.specta]
+version = "2.0.0-rc.21"
+features = [ "derive", "serde_json", "serde" ]
+
+[dependencies.tokio]
+version = "1"
+features = [ "full" ]
+
+[dependencies.reqwest]
+version = "0.12"
+features = [ "stream", "rustls-tls", "json" ]
+
+[dependencies.rhai]
+version = "1"
+features = [ "sync" ]
+
+[dependencies.mlua]
+version = "0.11"
+features = [ "lua54", "vendored", "send" ]
+
+[dependencies.zhconv]
+version = "0.4"
+features = [ "opencc" ]
+
+[dependencies.chrono]
+version = "0.4"
+features = [ "serde" ]
+
+[dependencies.sea-orm]
+version = "2.0.0-rc.27"
+features = [ "sqlx-sqlite", "runtime-tokio-rustls", "macros" ]

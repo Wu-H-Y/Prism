@@ -1,0 +1,83 @@
+{
+  // Rust 配置
+  "rust-analyzer.check.command": "clippy",
+  // TypeScript 配置
+  "typescript.experimental.useTsgo": true,
+  "typescript.tsdk": "node_modules\\typescript\\lib",
+  // 代码格式化配置
+  "editor.formatOnSave": true,
+  "editor.formatOnPaste": true,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.oxc": "always",
+    "source.organizeImports": "explicit"
+  },
+  // oxc 配置
+  "oxc.typeAware": true,
+  "editor.defaultFormatter": "oxc.oxc-vscode",
+  // 代码高亮和智能提示
+  "editor.semanticHighlighting.enabled": true,
+  "editor.bracketPairColorization.enabled": true,
+  "editor.guides.bracketPairs": true,
+  // React 开发辅助
+  "emmet.includeLanguages": {
+    "javascript": "javascriptreact",
+    "typescript": "typescriptreact"
+  },
+  "emmet.syntaxProfiles": {
+    "javascript": "jsx"
+  },
+  // 语法高亮
+  "editor.tokenColorCustomizations": {
+    "textMateRules": [
+      {
+        "scope": [
+          "keyword.control",
+          "storage.type.function",
+          "storage.type.class"
+        ],
+        "settings": {
+          "foreground": "#7C4DFF"
+        }
+      }
+    ]
+  },
+  // 文件关联
+  "files.associations": {
+    "*.tsx": "typescriptreact",
+    "*.jsx": "javascriptreact"
+  },
+  // TypeScript/React 智能提示
+  "typescript.suggest.autoImports": true,
+  "typescript.suggest.enabled": true,
+  "javascript.suggest.autoImports": true,
+  "javascript.suggest.enabled": true,
+  // 代码片段配置
+  "editor.snippetSuggestions": "top",
+  "editor.tabCompletion": "on",
+  // 性能优化
+  "typescript.preferences.includePackageJsonAutoImports": "on",
+  // 排除文件
+  "files.exclude": {
+    "**/node_modules": true,
+    "**/dist": true,
+    "**/build": true,
+    "**/.next": true
+  },
+  // 搜索排除
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/dist": true,
+    "**/build": true,
+    "**/.next": true,
+    "**/.git": true
+  },
+  "cSpell.words": [
+    "tauri"
+  ],
+  "[json]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
+  },
+  "[toml]": {
+    "editor.defaultFormatter": "tamasfe.even-better-toml"
+  }
+}

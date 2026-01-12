@@ -1,0 +1,57 @@
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none"
+    xmlns="http://www.w3.org/2000/svg">
+    <!-- 1. 背景容器 -->
+    <rect width="512" height="512" rx="115" fill="#09090B"/>
+
+    <defs>
+        <!-- 主体颜色：调整了角度，让颜色流动更自然 -->
+        <linearGradient id="prismFill" x1="150" y1="130" x2="400" y2="400" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="#00C4CC" />
+            <!-- 青色加深一点 -->
+            <stop offset="50%" stop-color="#7C4DFF" />
+            <!-- 标准紫 -->
+            <stop offset="100%" stop-color="#FF5722" />
+            <!-- 橙色 -->
+        </linearGradient>
+
+        <!-- 边缘光（Rim Light）：关键修改！ -->
+        <!-- 左上角是光源，所以是亮白色；右下角背光，变透明/深色 -->
+        <linearGradient id="strokeLight" x1="170" y1="130" x2="390" y2="380" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="white" stop-opacity="0.95"/>
+            <stop offset="40%" stop-color="white" stop-opacity="0.3"/>
+            <stop offset="100%" stop-color="white" stop-opacity="0.05"/>
+        </linearGradient>
+
+        <!-- 表面光泽（Surface Gloss）：关键修改！ -->
+        <!-- 这是一个从左上向右下的柔和白光渐变，不再是硬形状 -->
+        <linearGradient id="glossSheen" x1="170" y1="130" x2="300" y2="300" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" stop-color="white" stop-opacity="0.4"/>
+            <stop offset="100%" stop-color="white" stop-opacity="0"/>
+        </linearGradient>
+
+        <!-- 输入光束渐变 -->
+        <linearGradient id="beamGradient" x1="0" y1="0" x2="1" y2="0">
+            <stop offset="0%" stop-color="white" stop-opacity="0"/>
+            <stop offset="100%" stop-color="white" stop-opacity="0.6"/>
+        </linearGradient>
+    </defs>
+
+    <!-- 2. 输入光束 -->
+    <rect x="60" y="253" width="105" height="6" rx="3" fill="url(#beamGradient)"/>
+    <!-- 撞击点光晕 -->
+    <circle cx="170" cy="256" r="12" fill="#00C4CC" filter="blur(8px)" opacity="0.6"/>
+    <circle cx="170" cy="256" r="4" fill="white"/>
+
+    <!-- 3. 主体：Prism -->
+    <!-- (1) 填充层 -->
+    <path d="M170 130 L390 256 L170 382 Z" fill="url(#prismFill)"/>
+
+    <!-- (2) 光泽层 (Gloss Layer) -->
+    <!-- 同样的路径，但填充上面的 glossSheen 渐变 -->
+    <path d="M170 130 L390 256 L170 382 Z" fill="url(#glossSheen)" style="mix-blend-mode: screen;"/>
+
+    <!-- (3) 描边层 (Rim Light) -->
+    <!-- 放在最上面，确保边缘清晰 -->
+    <path d="M170 130 L390 256 L170 382 Z" stroke="url(#strokeLight)" stroke-width="8" stroke-linejoin="round" stroke-linecap="round"/>
+
+</svg>

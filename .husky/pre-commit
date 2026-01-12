@@ -1,0 +1,22 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+echo "🔍 Running pre-commit checks..."
+
+# 检查是否有需要处理的文件
+staged_files=$(git diff --cached --name-only --diff-filter=ACM)
+if [ -n "$staged_files" ]; then
+  echo "📝 Running lint-staged on all modified files..."
+
+  # 使用 lint-staged 处理所有文件类型（包括 Rust、前端和配置文件）
+  if ! bunx lint-staged; then
+    echo "❌ Lint-staged failed! Please fix the errors before committing."
+    exit 1
+  fi
+
+  echo "  ✅ All checks passed"
+else
+  echo "  ℹ️  No staged files to check"
+fi
+
+echo "✅ Pre-commit checks completed successfully!"
