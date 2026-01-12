@@ -31,4 +31,6 @@ src-tauri/Cargo.lock
 # rust
 **/target/
 
+# AI
 .claude/settings.local.json
+tmpclaude-**

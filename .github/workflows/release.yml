@@ -1,58 +1,117 @@
-name: Auto Release
+name: Release
 
 on:
   push:
-    branches:
-      - main
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
-  release:
-    name: Create Release
+  check_version:
+    name: Check Version Consistency
     runs-on: ubuntu-latest
-    permissions:
-      contents: write
     steps:
-      - name: Checkout code
+      - name: Checkout repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-          token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Setup Node.js
+      - name: Check tag version
+        run: |
+          TAG_REF="${GITHUB_REF_NAME:-${GITHUB_REF##*/}}"
+          echo "Checking tag: $TAG_REF"
+
+          PKG_VERSION=$(node -p "require('./package.json').version")
+          CARGO_VERSION=$(node -e "import('./scripts/sync-cargo-version.js').then(m => console.log(m.readCargoVersion()))")
+
+          EXPECTED_TAG="v$PKG_VERSION"
+
+          echo "package.json version: $PKG_VERSION"
+          echo "Cargo.toml version: $CARGO_VERSION"
+          echo "Expected tag: $EXPECTED_TAG"
+
+          if [[ "$TAG_REF" != "$EXPECTED_TAG" ]]; then
+            echo "::error::Tag version mismatch"
+            echo "  Git tag       : $TAG_REF"
+            echo "  package.json  : $EXPECTED_TAG"
+            exit 1
+          fi
+
+          if [[ "$PKG_VERSION" != "$CARGO_VERSION" ]]; then
+            echo "::error::Version mismatch between package.json and Cargo.toml"
+            exit 1
+          fi
+
+          echo "✅ All versions are consistent"
+
+  release:
+    name: Build and Release
+    needs: check_version
+    permissions:
+      contents: write
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - platform: 'macos-latest'
+            args: '--target aarch64-apple-darwin'
+          - platform: 'macos-latest'
+            args: '--target x86_64-apple-darwin'
+          - platform: 'ubuntu-22.04'
+            args: ''
+          - platform: 'windows-latest'
+            args: ''
+
+    runs-on: ${{ matrix.platform }}
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: setup node
         uses: actions/setup-node@v4
         with:
           node-version: '20'
+          cache: 'bun'
 
       - name: Setup Bun
         uses: oven-sh/setup-bun@v2
 
-      - name: Install dependencies
+      - name: install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          targets: ${{ matrix.platform == 'macos-latest' && 'aarch64-apple-darwin,x86_64-apple-darwin' || '' }}
+
+      - name: install dependencies (ubuntu only)
+        if: matrix.platform == 'ubuntu-22.04'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libwebkit2gtk-4.0-dev libwebkit2gtk-4.1-dev libappindicator3-dev librsvg2-dev patchelf
+
+      - name: install frontend dependencies
         run: bun install
 
-      - name: Configure Git
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git
-
-      - name: Create Release
+      - uses: tauri-apps/tauri-action@v0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          # 运行 release（自动更新版本、生成 CHANGELOG、创建 tag）
-          bun run release
+        with:
+          tagName: v__VERSION__
+          releaseName: 'Prism v__VERSION__'
+          releaseBody: |
+            See [CHANGELOG.md](https://github.com/${{ github.repository }}/blob/main/CHANGELOG.md) for detailed changes.
 
-          # 推送新的 tag 和 commits
-          git push --follow-tags origin main
+            ## Downloads
 
-      - name: Create GitHub Release
-        run: |
-          # 提取新创建的 tag
-          NEW_TAG=$(git describe --tags --abbrev=0)
+            ### Windows
+            - [x64 Setup](https://github.com/${{ github.repository }}/releases/download/v__VERSION__/Prism_{{VERSION}}_x64-setup.exe) | [x64 Portable](https://github.com/${{ github.repository }}/releases/download/v__VERSION__/Prism_{{VERSION}}_x64-portable.exe)
 
-          # 创建 GitHub Release
-          gh release create "$NEW_TAG" \
-            --title "$NEW_TAG" \
-            --notes "Please review [CHANGELOG.md](https://github.com/${{ github.repository }}/blob/main/CHANGELOG.md) for detailed changes."
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            ### macOS
+            - [Apple Silicon](https://github.com/${{ github.repository }}/releases/download/v__VERSION__/Prism_{{VERSION}}_aarch64.dmg) | [Intel](https://github.com/${{ github.repository }}/releases/download/v__VERSION__/Prism_{{VERSION}}_x64.dmg)
+
+            ### Linux
+            - [AppImage](https://github.com/${{ github.repository }}/releases/download/v__VERSION__/Prism_{{VERSION}}_amd64.AppImage) | [DEB](https://github.com/${{ github.repository }}/releases/download/v__VERSION__/Prism_{{VERSION}}_amd64.deb)
+          releaseDraft: false
+          prerelease: ${{ contains(github.ref_name, '-') }}
+          args: ${{ matrix.args }}

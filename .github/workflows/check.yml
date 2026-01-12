@@ -1,0 +1,78 @@
+name: Check
+
+on:
+  push:
+    branches:
+      - 'feature/**'
+      - 'fix/**'
+      - 'hotfix/**'
+      - 'release/**'
+  pull_request:
+    branches:
+      - main
+      - develop
+
+jobs:
+  lint:
+    name: Lint
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'bun'
+
+      - name: Setup Bun
+        uses: oven-sh/setup-bun@v2
+
+      - name: Install dependencies
+        run: bun install
+
+      - name: Run linter
+        run: bun run lint
+
+      - name: Check format
+        run: bun run format:check
+
+  rust-clippy:
+    name: Rust Clippy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Rust stable
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: clippy
+
+      - name: Rust Cache
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: './src-tauri -> target'
+
+      - name: Run Clippy
+        run: |
+          cd src-tauri
+          cargo clippy --all-targets --all-features -- -D warnings
+
+  rust-fmt:
+    name: Rust Format Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install Rust nightly
+        uses: dtolnay/rust-toolchain@nightly
+        with:
+          components: rustfmt
+
+      - name: Check formatting
+        run: |
+          cd src-tauri
+          cargo +nightly fmt --all -- --check

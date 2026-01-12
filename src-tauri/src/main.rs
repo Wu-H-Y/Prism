@@ -9,9 +9,9 @@ use tauri_specta::{Builder, collect_commands};
 
 // Import clean architecture modules
 mod commands;
+mod domain;
 mod events;
 mod state;
-mod domain;
 
 #[tokio::main]
 async fn main() {
