@@ -1,12 +1,6 @@
 {
   "$schema": "./node_modules/oxlint/configuration_schema.json",
-  "plugins": [
-    "unicorn",
-    "typescript",
-    "oxc",
-    "react",
-    "import"
-  ],
+  "plugins": ["unicorn", "typescript", "oxc", "react", "import"],
   "categories": {},
   "rules": {
     "constructor-super": "warn",
@@ -146,11 +140,5 @@
     "builtin": true
   },
   "globals": {},
-  "ignorePatterns": [
-    "node_modules",
-    "src-tauri",
-    "dist",
-    "Cargo.lock",
-    "Cargo.toml",
-  ]
+  "ignorePatterns": ["node_modules", "src-tauri", "dist", "Cargo.lock", "Cargo.toml"]
 }

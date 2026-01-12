@@ -18,6 +18,7 @@ hotfix/* (紧急修复分支)
 ## 分支说明
 
 ### main 分支
+
 - **用途**: 稳定发布版本，对应生产环境
 - **状态**: 始终可发布
 - **保护规则**:
@@ -26,6 +27,7 @@ hotfix/* (紧急修复分支)
   - PR 需要至少 1 个审查批准
 
 ### develop 分支
+
 - **用途**: 开发集成版本，对应开发环境
 - **状态**: 相对稳定，进行测试构建
 - **保护规则**:
@@ -33,28 +35,32 @@ hotfix/* (紧急修复分支)
   - 必须通过 PR 合并
   - 触发完整测试构建
 
-### feature/* 分支
+### feature/\* 分支
+
 - **用途**: 开发新功能
 - **来源**: 从 develop 分支创建
 - **目标**: 合并回 develop
 - **命名**: `feature/功能描述`
 - **触发**: CI 代码检查（不构建）
 
-### fix/* 分支
+### fix/\* 分支
+
 - **用途**: 修复 bug
 - **来源**: 从 develop 分支创建
 - **目标**: 合并回 develop
 - **命名**: `fix/问题描述`
 - **触发**: CI 代码检查（不构建）
 
-### release/* 分支
+### release/\* 分支
+
 - **用途**: 准备发布版本
 - **来源**: 从 develop 分支创建
 - **目标**: 合并到 main 和 develop
 - **命名**: `release/x.y.z`
 - **触发**: CI 代码检查（不构建）
 
-### hotfix/* 分支
+### hotfix/\* 分支
+
 - **用途**: 紧急修复生产问题
 - **来源**: 从 main 分支创建
 - **目标**: 合并到 main 和 develop
@@ -163,12 +169,12 @@ git push origin v0.1.8
 
 ## 版本管理命令
 
-| 命令 | 说明 | 使用场景 |
-|-----|------|---------|
-| `bun run release:patch` | 升级补丁版本 (0.1.7 → 0.1.8) | bug 修复 |
-| `bun run release:minor` | 升级次版本 (0.1.7 → 0.2.0) | 新功能 |
-| `bun run release:major` | 升级主版本 (0.1.7 → 1.0.0) | 破坏性变更 |
-| `bun run release:dry` | 预览版本变更（不实际执行） | 测试 |
+| 命令                    | 说明                         | 使用场景   |
+| ----------------------- | ---------------------------- | ---------- |
+| `bun run release:patch` | 升级补丁版本 (0.1.7 → 0.1.8) | bug 修复   |
+| `bun run release:minor` | 升级次版本 (0.1.7 → 0.2.0)   | 新功能     |
+| `bun run release:major` | 升级主版本 (0.1.7 → 1.0.0)   | 破坏性变更 |
+| `bun run release:dry`   | 预览版本变更（不实际执行）   | 测试       |
 
 ## Commit 规范
 
@@ -200,9 +206,11 @@ git commit -m "chore: 更新依赖版本"
 ## CI/CD 流程
 
 ### Check 工作流 (`.github/workflows/check.yml`)
+
 **触发**: `feature/*`, `fix/*`, `hotfix/*`, `release/*` 分支
 
 **检查**:
+
 - Lint (oxlint)
 - Format check (oxfmt)
 - Rust Clippy
@@ -210,17 +218,21 @@ git commit -m "chore: 更新依赖版本"
 - TypeScript Type check
 
 ### Test Build 工作流 (`.github/workflows/test-build.yml`)
+
 **触发**: develop 分支
 
 **构建**:
+
 - macOS (Apple Silicon + Intel)
 - Windows (x64)
 - Linux (x64)
 
 ### Release 工作流 (`.github/workflows/release.yml`)
+
 **触发**: 推送 `v*` tag
 
 **流程**:
+
 1. 检查版本一致性
 2. 跨平台构建
 3. 创建 GitHub Release

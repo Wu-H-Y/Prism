@@ -30,11 +30,7 @@
   "editor.tokenColorCustomizations": {
     "textMateRules": [
       {
-        "scope": [
-          "keyword.control",
-          "storage.type.function",
-          "storage.type.class"
-        ],
+        "scope": ["keyword.control", "storage.type.function", "storage.type.class"],
         "settings": {
           "foreground": "#7C4DFF"
         }
@@ -71,9 +67,7 @@
     "**/.next": true,
     "**/.git": true
   },
-  "cSpell.words": [
-    "tauri"
-  ],
+  "cSpell.words": ["tauri"],
   "[json]": {
     "editor.defaultFormatter": "vscode.json-language-features"
   },

@@ -2,7 +2,7 @@
 name = "app"
 description = "Prism rust backend"
 version = "0.0.1"
-authors = [ "Wuhy" ]
+authors = ["Wuhy"]
 edition = "2024"
 
 [build-dependencies.tauri-build]
@@ -11,7 +11,7 @@ features = []
 
 [lib]
 name = "app_lib"
-crate-type = [ "staticlib", "cdylib", "rlib" ]
+crate-type = ["staticlib", "cdylib", "rlib"]
 
 [dependencies]
 tauri-plugin-log = "2"
@@ -52,40 +52,40 @@ features = []
 
 [dependencies.tauri-specta]
 version = "2.0.0-rc.21"
-features = [ "derive", "typescript" ]
+features = ["derive", "typescript"]
 
 [dependencies.serde]
 version = "1.0"
-features = [ "derive" ]
+features = ["derive"]
 
 [dependencies.specta]
 version = "2.0.0-rc.21"
-features = [ "derive", "serde_json", "serde" ]
+features = ["derive", "serde_json", "serde"]
 
 [dependencies.tokio]
 version = "1"
-features = [ "full" ]
+features = ["full"]
 
 [dependencies.reqwest]
 version = "0.12"
-features = [ "stream", "rustls-tls", "json" ]
+features = ["stream", "rustls-tls", "json"]
 
 [dependencies.rhai]
 version = "1"
-features = [ "sync" ]
+features = ["sync"]
 
 [dependencies.mlua]
 version = "0.11"
-features = [ "lua54", "vendored", "send" ]
+features = ["lua54", "vendored", "send"]
 
 [dependencies.zhconv]
 version = "0.4"
-features = [ "opencc" ]
+features = ["opencc"]
 
 [dependencies.chrono]
 version = "0.4"
-features = [ "serde" ]
+features = ["serde"]
 
 [dependencies.sea-orm]
 version = "2.0.0-rc.27"
-features = [ "sqlx-sqlite", "runtime-tokio-rustls", "macros" ]
+features = ["sqlx-sqlite", "runtime-tokio-rustls", "macros"]
